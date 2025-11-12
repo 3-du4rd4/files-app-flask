@@ -69,7 +69,7 @@ pip install -r requirements.txt
 ### 3 - Executar o app localmente (teste)
 
 ```bash
-python app.py
+python run.py
 ```
 
 ### 4 - Criar o arquivo de serviço systemd
