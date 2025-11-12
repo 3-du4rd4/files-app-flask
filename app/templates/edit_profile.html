@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-4">
+  <div class="card shadow border-0 rounded-4" style="width: 600px;">
+      <form method="POST" action="{{ url_for('main.edit_profile') }}" enctype="multipart/form-data">
+
+    
+    <div class="card-header d-flex align-items-center bg-white border-0 pt-4 pb-0">
+      <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-dark">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h5 class="fw-semibold mb-0 ms-3">Edit Profile</h5>
+    </div>
+
+    <div class="card-body p-4">
+      <div class="text-center mb-4">
+        <div class="position-relative d-inline-block">
+          <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/default.png') }}" 
+               alt="Current Profile" 
+               class="rounded-circle mb-3" 
+               style="width: 120px; height: 120px; object-fit: cover;">
+          <label for="profile_image" class="position-absolute bottom-0 end-0 bg-primary rounded-circle border border-3 border-white"      style="cursor: pointer; width: 32px; height: 32px;">
+            <i class="bi bi-pencil-fill text-white" style="font-size: 0.8rem;"></i>
+          </label>
+        </div>
+        
+        <input type="file" name="profile_image" id="profile_image" class="d-none" accept="image/*">
+        
+        <h4 class="fw-bold">@{{ current_user.username }}</h4>
+        <p class="text-muted small mb-0">Created on {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" style="font-size: 0.9rem;">
+        {{ message }}
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+        <div class="mb-3">
+          <label class="form-label">Full name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+            <input type="text" name="full_name" class="form-control" value="{{ current_user.full_name }}" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+            <input type="email" name="email" class="form-control" value="{{ current_user.email }}" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-text-paragraph"></i></span>
+            <textarea name="description" class="form-control" rows="3" placeholder="Tell us about yourself">{{ current_user.description or '' }}</textarea>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">New Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+            <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+            <span class="input-group-text bg-white toggle-password" style="cursor: pointer;">
+              <i class="bi bi-eye"></i>
+            </span>
+          </div>
+          <div class="form-text">Optional - leave empty if you don't want to change</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.parentElement.querySelector('input');
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+      }
+    });
+  });
+
+  document.getElementById('profile_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.querySelector('.rounded-circle').src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+{% endblock %}

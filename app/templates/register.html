@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-4">
+  <div class="card shadow border-0 rounded-4" style="width: 420px;">
+    <div class="card-body p-4">
+      <div class="text-center mb-4">
+        <img src="{{ url_for('static', filename='images/undraw_sign-up_qamz.png') }}" alt="Register" style="width: 160px;">
+        <h4 class="mt-3 fw-bold">Create Account</h4>
+        <p class="text-muted small mb-0">Fill the fields below to get started</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+     <div 
+        class="alert alert-{{ category }} alert-dismissible fade show" 
+        role="alert" 
+        style="font-size: 0.9rem; color: #c71f1f;">
+        {{ message }}
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label">Full name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+            <input type="text" name="full_name" class="form-control" placeholder="Enter your full name" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">User name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+            <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+            <input type="password" name="password" class="form-control" placeholder="Create a password" required>
+            <span class="input-group-text bg-white toggle-password" style="cursor: pointer;">
+              <i class="bi bi-eye"></i>
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+      </form>
+
+      <div class="text-center mt-4">
+        <small class="text-muted">Already have an account?</small>
+        <a href="{{ url_for('main.login') }}" class="text-decoration-none fw-semibold">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.parentElement.querySelector('input');
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+      }
+    });
+  });
+</script>
+{% endblock %}

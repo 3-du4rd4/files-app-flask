@@ -1,0 +1,32 @@
+# ----------------------------
+# Configurações sensíveis
+# ----------------------------
+.env                
+instance/            
+
+# ----------------------------
+# Uploads e arquivos gerados
+# ----------------------------
+app/static/profile_pics/*
+!app/static/profile_pics/.gitkeep
+
+# ----------------------------
+# Python cache e compilados
+# ----------------------------
+app/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ----------------------------
+# Virtualenv
+# ----------------------------
+venv/
+env/
+.venv/
+.env/
+
+# ----------------------------
+# Arquivos de log
+# ----------------------------
+*.log

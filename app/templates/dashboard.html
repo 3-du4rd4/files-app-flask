@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row align-items-center mb-5">
+    <div class="col-md-8">
+      <h1 class="display-5 fw-bold mb-3">Welcome, {{ current_user.username }}</h1>
+      <h2 class="h4 text-muted mb-3">Hey {{ current_user.full_name }}! Nunc quis lorem malesuada, porta elit id, fringilla nulla. Cras quis velit eget augue lacinia faucibus quis in dui.</h2>
+      <p class="text-muted">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </p>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src="{{ url_for('static', filename='images/undraw_upload_cucu.png') }}" 
+             alt="Profile" class="img-fluid" style="width: 300px;">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="h5 fw-bold">Files</h3>
+         <button class="btn btn-outline-primary btn-sm">Upload File</button>
+      </div>
+
+      <div class="text-center">
+        <img src="{{ url_for('static', filename='images/undraw_no-data_ig65.png') }}" 
+             alt="Profile" class="img-fluid" style="width: 150px;">
+        <p class="text-muted mt-3">You have no files uploaded yet. Start by uploading your first file to see it here!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .border-bottom {
+    border-color: #e9ecef !important;
+  }
+  .card {
+    border-radius: 0.75rem;
+  }
+  .display-5 {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
