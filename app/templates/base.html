@@ -31,13 +31,13 @@
     </style>
   </head>
   <body class="">
-    {% if current_user.is_authenticated %}
+    {% if user %}
     <nav class="navbar navbar-expand-lg mb-4">
       <div class="container">
         <a class="navbar-brand" href="/">FilesApp</a>
         <div class="nav-actions">
           <a href="/edit_profile" class="d-flex align-items-center text-decoration-none">
-            <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/default.jpg') }}" 
+            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) if user.profile_image else url_for('static', filename='images/default.jpg') }}" 
                  alt="Perfil" 
                  class="profile-pic">
           </a>
