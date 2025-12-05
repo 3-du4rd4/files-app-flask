@@ -17,7 +17,7 @@
     <div class="card-body p-4">
       <div class="text-center mb-4">
         <div class="position-relative d-inline-block">
-          <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/default.png') }}" 
+          <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) if user.profile_image else url_for('static', filename='images/default.png') }}" 
                alt="Current Profile" 
                class="rounded-circle mb-3" 
                style="width: 120px; height: 120px; object-fit: cover;">
@@ -28,8 +28,8 @@
         
         <input type="file" name="profile_image" id="profile_image" class="d-none" accept="image/*">
         
-        <h4 class="fw-bold">@{{ current_user.username }}</h4>
-        <p class="text-muted small mb-0">Created on {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+        <h4 class="fw-bold">@{{ user.username }}</h4>
+        <p class="text-muted small mb-0">Created on {{ user.created_at.strftime('%B %d, %Y') }}</p>
       </div>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -47,7 +47,7 @@
           <label class="form-label">Full name</label>
           <div class="input-group">
             <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
-            <input type="text" name="full_name" class="form-control" value="{{ current_user.full_name }}" required>
+            <input type="text" name="full_name" class="form-control" value="{{ user.full_name }}" required>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
           <label class="form-label">Email</label>
           <div class="input-group">
             <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
-            <input type="email" name="email" class="form-control" value="{{ current_user.email }}" required>
+            <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
           </div>
         </div>
 
@@ -63,7 +63,7 @@
           <label class="form-label">Description</label>
           <div class="input-group">
             <span class="input-group-text bg-white"><i class="bi bi-text-paragraph"></i></span>
-            <textarea name="description" class="form-control" rows="3" placeholder="Tell us about yourself">{{ current_user.description or '' }}</textarea>
+            <textarea name="description" class="form-control" rows="3" placeholder="Tell us about yourself">{{ user.description or '' }}</textarea>
           </div>
         </div>
 
