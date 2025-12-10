@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}{{ file.obj.original_filename }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="flex-grow-1 text-truncate">
+                <h3 class="mb-0 fw-semibold text-truncate">{{ file.obj.original_filename }}</h3>
+                <small class="text-muted text-truncate d-block">{{ file.obj.file_type }}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            
+            {% set mime_type = file.obj.file_type.split('/')[0] %}
+            
+            {% if mime_type == 'image' %}
+                <div class="d-flex align-items-center justify-content-center">
+                    <img src="{{ file.file_url }}" 
+                         class="img-fluid" 
+                         alt="{{ file.obj.original_filename }}" 
+                         style="max-height: 75vh; max-width: 100%; object-fit: contain;">
+                </div>
+
+            {% elif mime_type == 'audio' %}
+                <div class="p-5 text-center">
+                    <i class="bi bi-music-note-beamed display-3 text-dark mb-4"></i>
+                    <div class="mx-auto" style="max-width: 600px;">
+                        <audio controls class="w-100" style="height: 54px; border-radius: 50px;">
+                            <source src="{{ file.file_url }}" type="{{ file.obj.file_type }}">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+
+            {% elif mime_type == 'video' %}
+            <div class="bg-black p-3">
+
+                {% if file.video_versions %}
+                    <div class="d-flex justify-content-end mb-2">
+                        <select id="resolutionSelect" class="form-select w-auto">
+                            <option value="1080p">1080p</option>
+                            <option value="720p">720p</option>
+                            <option value="480p">480p</option>
+                        </select>
+                    </div>
+
+                    <video id="videoPlayer" controls class="w-100" style="max-height: 75vh; display: block;">
+                        <source id="videoSource" src="{{ file.video_versions['1080p'] }}" type="{{ file.obj.file_type }}">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <script>
+                        const versions = JSON.parse(`{{ file.video_versions | tojson | safe }}`);
+                        const select = document.getElementById("resolutionSelect");
+                        const video = document.getElementById("videoPlayer");
+                        const source = document.getElementById("videoSource");
+
+                        select.addEventListener("change", () => {
+                            source.src = versions[select.value];
+                            video.load();
+                            video.play();
+                        });
+                    </script>
+
+                {% else %}
+                    <video controls class="w-100" style="max-height: 75vh; display: block;">
+                        <source src="{{ file.file_url }}" type="{{ file.obj.file_type }}">
+                        Your browser does not support the video tag.
+                    </video>
+                {% endif %}
+
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mt-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">File Information</h5>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">File Type</small>
+                        <strong>{{ file.obj.file_type }}</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">File Size</small>
+                        <strong>{{ (file.obj.file_size / 1024 / 1024) | round(2) }} MB</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">Upload Date</small>
+                        <strong>{{ file.obj.upload_date.strftime('%Y-%m-%d %H:%M') }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-2">
+
+                {% if file.obj.description %}
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">Description</small>
+                        <strong>{{ file.obj.description }}</strong>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if file.obj.genre %}
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">Genre</small>
+                        <strong>{{ file.obj.genre }}</strong>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if file.obj.tags and file.obj.tags is not none %}
+                <div class="col-md-4">
+                    <div>
+                        <small class="text-muted d-block mb-1">Tags</small>
+                        <strong>
+                            {% for tag in file.obj.tags %}
+                                <span class="badge bg-primary me-1">{{ tag }}</span>
+                            {% endfor %}
+                        </strong>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if file.metadata %}
+                <div class="row g-4 mt-2">
+                    {% if file.obj.image_metadata %}
+                        {% set md = file.obj.image_metadata %}
+                        
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Resolution</small>
+                                <strong>{{ md.width }} × {{ md.height }}</strong>
+                            </div>
+                        </div>
+
+                        {% if md.dpi %}
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">DPI</small>
+                                <strong>{{ md.dpi }}</strong>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if md.color_depth %}
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Color Depth</small>
+                                <strong>{{ md.color_depth }}</strong>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if file.obj.video_metadata %}
+                        {% set md = file.obj.video_metadata %}
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Resolution</small>
+                                <strong>{{ md.width }} × {{ md.height }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Duration</small>
+                                <strong>{{ md.duration | round(2) }}s</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">FPS</small>
+                                <strong>{{ md.fps }}</strong>
+                            </div>
+                        </div>
+
+                        {% if md.codec %}
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Codec</small>
+                                <strong>{{ md.codec }}</strong>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if file.obj.audio_metadata %}
+                        {% set md = file.obj.audio_metadata %}
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Duration</small>
+                                <strong>{{ md.duration | round(2) }}s</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Bitrate</small>
+                                <strong>{{ md.bitrate }} kbps</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div>
+                                <small class="text-muted d-block mb-1">Sample Rate</small>
+                                <strong>{{ md.sample_rate }} Hz</strong>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    audio::-webkit-media-controls-panel {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+</style>
+{% endblock %}

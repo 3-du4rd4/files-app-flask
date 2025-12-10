@@ -17,6 +17,7 @@ app/__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+__pycache__/
 
 # ----------------------------
 # Virtualenv
