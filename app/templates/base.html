@@ -37,7 +37,7 @@
         <a class="navbar-brand" href="/">FilesApp</a>
         <div class="nav-actions">
           <a href="/edit_profile" class="d-flex align-items-center text-decoration-none">
-            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) if user.profile_image else url_for('static', filename='images/default.jpg') }}" 
+            <img src="{{ profile_url if profile_url else url_for('static', filename='images/default.jpg') }}" 
                  alt="Perfil" 
                  class="profile-pic">
           </a>

@@ -1,13 +1,16 @@
-from flask import Flask, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+import os
 from datetime import timedelta 
 from dotenv import load_dotenv
-import os
-
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager 
+from flask import Flask, redirect, url_for
+
 
 db = SQLAlchemy()
 jwt = JWTManager() 
+migrate = Migrate()
+
 
 def create_app():
     app = Flask(__name__)
@@ -41,7 +44,7 @@ def create_app():
     
 
     db.init_app(app)
-    
+    migrate.init_app(app, db)
     jwt.init_app(app) 
 
     @jwt.unauthorized_loader
