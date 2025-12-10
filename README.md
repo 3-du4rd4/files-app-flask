@@ -1,7 +1,7 @@
-# Sistema de Upload de Arquivos — Protótipo AWS (Parte 1)
+# Sistema de Upload de Arquivos — Protótipo AWS
 
-Este projeto é a **primeira etapa** do desenvolvimento de um sistema de upload de arquivos com integração à **AWS**, desenvolvido como parte da disciplina **Tópicos em Engenharia de Software**.  
-Nesta fase inicial, o foco está na **aplicação web básica** (login, registro, edição de perfil) e na **configuração da infraestrutura na AWS** (VPC, sub-rede, tabela de rotas e instância EC2).
+Este projeto engloba o desenvolvimento de um sistema de upload de arquivos com integração à **AWS**, desenvolvido como parte da disciplina **Tópicos em Engenharia de Software**.  
+O projeto conta com uma **aplicação web básica** e **configuração da infraestrutura na AWS**.
 
 ---
 
@@ -11,10 +11,11 @@ A aplicação foi desenvolvida em **Flask (Python)** e conta com as seguintes op
 
 - Registro de usuários  
 - Login e logout  
-- Edição de perfil  
+- Edição de perfil
+- Upload de arquivos (imagem, vídeo e áudio)
+- Listagem, visualização, edição e exclusão de arquivos.
 
-> Nesta etapa, ainda **não há integração com o Amazon S3 e o Amazon RDS**. O armazenamento de arquivos e usuários é feito localmente no servidor.  
-> A integração com serviços de armazenamento será implementada na **Parte 2** do projeto.
+> O armazenamento de arquivos e usuários é feito com o Amazon RDS e S3.  
 
 ---
 
@@ -22,7 +23,8 @@ A aplicação foi desenvolvida em **Flask (Python)** e conta com as seguintes op
 
 ### Aplicação
 - **Framework:** Flask (Python)
-- **Banco de Dados:** SQLite
+- **Banco de Dados:** Postgre - Amazon RDS
+- **Gerenciado de arquivos:** S3
 - **Gerenciamento de ambiente:** virtualenv
 - **Serviço de aplicação:** systemd
 
@@ -41,6 +43,8 @@ A aplicação foi implantada em uma instância **EC2** dentro de uma **VPC** con
 | **Instância EC2** | Máquina virtual executando a aplicação Flask |
 | **Tipo da instância** | t3.micro |
 | **Sistema operacional** | Ubuntu 22.04 LTS |
+| **Banco RDS** | Postgre |
+| **Armazenamento de arquivos** | S3 |
 
 ---
 
@@ -94,6 +98,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+Inclua também as variáveis necessárias para conexão com o RDS e o S3.
 
 ### 5 - Ativar e iniciar o serviço
 ```bash
@@ -103,6 +108,9 @@ sudo systemctl start flask_app
 sudo systemctl status flask_app
 ```
 A partir disso, a aplicação inicia automaticamente toda vez que a instância EC2 for reiniciada.
+
+### 6 - Instalar ffmpeg
+A partir disso, as funções de processamento de áudio e vídeo conseguirão ser executadas.
 
 ## Acesso à aplicação
 A aplicação estará acessível no navegador pelo IP público da instância EC2:
